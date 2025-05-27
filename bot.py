@@ -5,6 +5,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 import json
 import os
 import datetime
+import pytz
 
 API_TOKEN = "6866417541:AAGt08D0gZ7JdUypgFBuQU1D35SnwBKnhOI"
 BIRTHDAYS_FILE = "birthdays.json"
@@ -186,29 +187,37 @@ async def birthday_checker():
         "Стриптизерша": "Пусть танцы будут страстными, а аплодисменты — громкими!",
         "Черный русский": "Пусть коктейли будут крепкими, а вечера — незабываемыми!"
     }
+    sent_today = set()
     while True:
-        today = datetime.datetime.now().strftime("%d.%m")
-        if os.path.exists(BIRTHDAYS_FILE):
-            with open(BIRTHDAYS_FILE, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            for key, info in data.items():
-                if info.get("date") == today:
-                    name = info.get("name", "Друг")
-                    nickname = info.get("nickname", "")
-                    gender = info.get("gender", "male")
-                    wish = wishes.get(nickname, "Пусть сбудется всё задуманное!")
-                    if gender == "female":
-                        text = (
-                            f"🥳 Сегодня свой День Рождения празднует дорогая 🎉 <b>{name}</b>, "
-                            f"также известная как <b>{nickname}</b>! 🥂{wish} 🎁"
-                        )
-                    else:
-                        text = (
-                            f"🥳 Сегодня свой День Рождения празднует дорогой 🎉 <b>{name}</b>, "
-                            f"также известный как <b>{nickname}</b>! 🥂{wish} 🎁"
-                        )
-                    await bot.send_message(chat_id, text, parse_mode="HTML")
-        await asyncio.sleep(24*60*60)  # 24 часа
+        now = datetime.datetime.now(pytz.timezone('Europe/Moscow'))
+        today = now.strftime("%d.%m")
+        hour = now.hour
+        minute = now.minute
+        if hour == 17 and minute == 5 and today not in sent_today:
+            if os.path.exists(BIRTHDAYS_FILE):
+                with open(BIRTHDAYS_FILE, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                for key, info in data.items():
+                    if info.get("date") == today:
+                        name = info.get("name", "Друг")
+                        nickname = info.get("nickname", "")
+                        gender = info.get("gender", "male")
+                        wish = wishes.get(nickname, "Пусть сбудется всё задуманное!")
+                        if gender == "female":
+                            text = (
+                                f"🥳 Сегодня свой День Рождения празднует дорогая 🎉 <b>{name}</b>, "
+                                f"также известная как <b>{nickname}</b>! 🥂{wish} 🎁"
+                            )
+                        else:
+                            text = (
+                                f"🥳 Сегодня свой День Рождения празднует дорогой 🎉 <b>{name}</b>, "
+                                f"также известный как <b>{nickname}</b>! 🥂{wish} 🎁"
+                            )
+                        await bot.send_message(chat_id, text, parse_mode="HTML")
+            sent_today.add(today)
+        elif hour != 17 or minute != 5:
+            sent_today.discard(today)
+        await asyncio.sleep(30)  # Проверять каждые 30 секунд
 
 async def main():
     asyncio.create_task(birthday_checker())
