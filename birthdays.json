@@ -7,6 +7,6 @@
   "abramovich": {"name": "Диана Абрамович", "nickname": "Работяга", "date": "03.10", "gender": "female"},
   "shcherbakov": {"name": "Вадим Щербаков", "nickname": "Пивопоглотитель", "date": "16.11", "gender": "male"},
   "popov": {"name": "Федя Попов", "nickname": "Ляля", "date": "01.01", "gender": "male"},
-  "batogova": {"name": "Катя Батогова", "nickname": "Стриптизерша", "date": null, "gender": "female"},
+  "batogova": {"name": "Катя Батогова", "nickname": "Стриптизерша", "date": 11.01, "gender": "female"},
   "lopatina": {"name": "Ксюша Лопатина", "nickname": "Черный русский", "date": "29.09", "gender": "female"}
 }
