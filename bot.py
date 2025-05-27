@@ -193,7 +193,7 @@ async def birthday_checker():
         today = now.strftime("%d.%m")
         hour = now.hour
         minute = now.minute
-        if hour == 17 and minute == 15 and today not in sent_today:
+        if hour == 0 and minute == 0 and today not in sent_today:
             if os.path.exists(BIRTHDAYS_FILE):
                 with open(BIRTHDAYS_FILE, "r", encoding="utf-8") as f:
                     data = json.load(f)
@@ -215,7 +215,7 @@ async def birthday_checker():
                             )
                         await bot.send_message(chat_id, text, parse_mode="HTML")
             sent_today.add(today)
-        elif hour != 17 or minute != 15:
+        elif hour != 0 or minute != 0:
             sent_today.discard(today)
         await asyncio.sleep(30)  # Проверять каждые 30 секунд
 
